@@ -1,0 +1,55 @@
+stages:
+  - qa
+  - build
+  - deploy
+
+include:
+  - project: brisa/brisa-gitlab
+    ref: main
+    file: gitlab-ci.yml
+
+fmt:
+  image: denoland/deno:1.41.3
+  stage: qa
+  script:
+    - deno fmt --check
+
+lint:
+  image: denoland/deno:1.41.3
+  stage: qa
+  script:
+    - deno lint -q
+
+.build:
+  extends: .docker-build
+  stage: build
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  script:
+    - docker pull $IMAGE_TAG || true
+    - docker build --cache-from $IMAGE_TAG -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
+
+build:
+  extends: .build
+  only:
+    - main
+
+.deploy:
+  extends: .deploy-k8s-helm-upgrade
+  stage: deploy
+  variables:
+    CHART: oci://gitlab.zettabrasil.com.br:5050/zettabrasil/z-charts/simple-server
+    CHART_VERSION: 0.1.21
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    DEPLOY_NAME: brisa
+
+deploy-sandbox:
+  extends: .deploy
+  environment:
+    name: sandbox
+    url: https://sandbox-brisa.zettabrasil.com.br
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  variables:
+    DEPLOY_NAMESPACE: sandbox

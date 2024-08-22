@@ -1,0 +1,57 @@
+/* @import "node_modules/ol/ol.css"; */
+
+/* html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+#popup {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px;
+  max-width: 200px;
+  text-align: center;
+} */
+
+.loading {
+  background-image: url(/src/assets/loading.gif);
+  background-size: 30px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+button.loading {
+  background-color: #e1e1e1;
+  cursor: wait;
+}
+
+button.loading:hover {
+  background-color: #e1e1e1;
+}
+
+.btn {
+    background-color: #2559A0;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all linear 160ms;
+    text-transform: uppercase;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    background-color: #1E4A7D;
+}

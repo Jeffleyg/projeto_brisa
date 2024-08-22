@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtro</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="./filter.js"></script>
+</head>
+
+<body>
+    <div class="page">
+        <form id="formFilter" method="POST" class="formFilter">
+            <img src="../../assets/zettaLogo.png" alt="Logo da Empresa" class="logo">
+            <label for="segmento">Área de Atuação</label>
+            <input type="text" id="segment" name="segmento" placeholder="Ex: Restaurante, Pet Shop">
+            <label for="nome">Nome da Empresa</label>
+            <input type="text" id="company" name="empresa" placeholder="Nome da Empresa">
+            <label for="cidade">Cidade</label>
+            <input type="text" id="city" name="cidade" placeholder="Cidade">
+            <label for="bairro">Bairro</label>
+            <input type="text" id="neighborhood" name="bairro" placeholder="Bairro">
+            <button type="submit" class="btn" id="filterButton">Filtrar</button>
+        </form>
+        <button id="logoutButton">Logout</button>
+    </div>
+    <div class="side-image-container">
+        <img src="../../assets/background.png" alt="Imagem Lateral" class="side-image">
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <h2 class="section-title" id="nome">Informações de -</h2>
+            <div class="field-group">
+                <div class="field">
+                    <label for="bairro">Bairro:</label>
+                    <input type="text" id="bairro" name="bairro" value="-" disabled>
+                </div>
+                <div class="field">
+                    <label for="cidade">Cidade:</label>
+                    <input type="text" id="cidade" name="cidade" value="-" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <h2 class="section-title">Estatísticas</h2>
+            <div class="filter-container">
+                <label for="dataInicial">Data Inicial:</label>
+                <input type="text" id="dataInicial" name="dataInicial">
+                <label for="dataFinal">Data Final:</label>
+                <input type="text" id="dataFinal" name="dataFinal">
+                <button class="btn" id="btnFiltrarGeral">Filtrar</button>
+            </div>
+            <div class="statistics-container">
+                <div class="statistics-box" id="vendaTotalBox">
+                    <h3>Total em vendas no período</h3>
+                    <p id="venda">R$ 0</p>
+                </div>
+                <div class="statistics-box" id="maiorVendaClienteBox">
+                    <h3>Maior venda do cliente no período</h3>
+                    <p id="maiorVendaCliente">R$ 0</p>
+                </div>
+                <div class="statistics-box" id="faturamentoTotalBox">
+                    <h3>Faturamento Total</h3>
+                    <p id="faturamentoTotal">R$ 0</p>
+                </div>
+                <div class="statistics-box" id="numClientesBox">
+                    <h3>Ticket médio no período</h3>
+                    <p id="ticketMedio">R$ 0</p>
+                </div>
+                <div class="statistics-box" id="vendaProdutoBox" data-tooltip="Clique para ver o gráfico produtos mais vendidos">
+                    <h3>Produto mais vendido no período</h3>
+                    <p id="produtoMaisVendido">-</p>
+                </div>
+                <div class="statistics-box" id="valorProdutoBox" data-tooltip="Clique para ver o gráfico de valor dos produtos">
+                    <h3>Produtos com maior valor vendido no período</h3>
+                    <p id="valorProduto">-</p>
+                </div>
+            </div>
+            <div class="chart-container" id="chartContainerProduto">
+                <canvas id="produtosMaisVendidosChart"></canvas>
+            </div>
+            <div class="chart-container" id="chartContainerValor">
+                <canvas id="valorProdutosChart"></canvas>
+            </div>
+        </div>
+        <div class="button-container">
+            <button class="btn" id="btnExportar">Voltar para o mapa</button>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="./main.js"></script>
+    <script>
+        $(function() {
+            // inicialização do datepicker
+            const lastMonth = new Date();
+            lastMonth.setMonth(lastMonth.getMonth() - 1);
+            $("#dataInicial").datepicker({
+                dateFormat: 'dd/mm/yy',
+            }).datepicker("setDate", lastMonth);
+
+            $("#dataFinal").datepicker({
+                dateFormat: 'dd/mm/yy',
+            }).datepicker("setDate", new Date());
+
+            var ctxProdutoMaisVendido = document.getElementById('produtosMaisVendidosChart').getContext('2d');
+            var produtosMaisVendidosChart = new Chart(ctxProdutoMaisVendido, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Quantidade de Vendas por Produto',
+                        data: [],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            beginAtZero: true
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            var ctxValorProdutos = document.getElementById('valorProdutosChart').getContext('2d');
+            var valorProdutosChart = new Chart(ctxValorProdutos, {
+                type: 'line',
+                data: {
+                    labels: ['Produto A', 'Produto B', 'Produto C', 'Produto D'],
+                    datasets: [{
+                        label: 'Total em R$ vendido por produto',
+                        data: [20000, 18000, 15000, 21000],
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            beginAtZero: true
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            $('#vendaProdutoBox').click(function() {
+                const produtos = JSON.parse(sessionStorage.getItem("produtosMaisVendidos"));
+                if (!produtos.length)
+                    return; // não exibe o gráfico se não tem produtos vendidos
+
+                let labels = [];
+                let valores = [];
+
+                produtos.forEach(produto => {
+                    labels.push(produto.produto);
+                    valores.push(produto.num_vendas);
+                });
+
+                produtosMaisVendidosChart.data.labels = labels; 
+                produtosMaisVendidosChart.data.datasets[0].data = valores; 
+
+                $('#chartContainerProduto').toggle();
+                $('#chartContainerValor').hide();
+            });
+
+            $('#valorProdutoBox').click(function() {
+                const produtos = JSON.parse(sessionStorage.getItem("produtosMaiorValorVendido"));
+                if (!produtos.length)
+                    return; // não exibe o gráfico se não tem produtos vendidos
+
+                let labels = [];
+                let valores = [];
+
+                produtos.forEach(produto => {
+                    labels.push(produto.produto);
+                    valores.push(produto.total_vendido);
+                });
+
+                valorProdutosChart.data.labels = labels; 
+                valorProdutosChart.data.datasets[0].data = valores; 
+
+                $('#chartContainerValor').toggle();
+                $('#chartContainerProduto').hide();
+            });
+
+            $('#btnExportar').click(function() {
+                // Redirecionar para a página desejada
+                globalThis.location.href = '../map/mapPage.html';
+            });
+        });
+    </script>
+</body>
+</html>

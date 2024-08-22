@@ -1,0 +1,109 @@
+body,
+html {
+  margin: 0;
+  font-family: sans-serif;
+  font-size: 12px;
+}
+
+#map {
+  height: 100vh;
+  width: 100%;
+}
+
+.popup {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.popup.open {
+  opacity: 1;
+}
+
+.popup-body {
+  position: fixed;
+  width: 200px;
+  padding: 10px;
+  background-color: #ffffff;
+  border-radius: 3px;
+  box-shadow: 0 2px 22px rgba(5, 25, 75, 0.5);
+  z-index: 1000;
+}
+
+.popup-indicator {
+  width: 0;
+  height: 0;
+  margin-left: 3px;
+  border-style: solid;
+  border-width: 0 7px 9px 7px;
+  border-color: transparent transparent #ffffff transparent;
+  z-index: 100000;
+  position: relative;
+}
+
+.client-name {
+  font-weight: bold;
+  color: #565656;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.client-cep {
+  color: #a3a3a3;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.btn-estatistica {
+  background-color: #2559A0;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  padding: 5px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all linear 160ms;
+  width: 100%;
+}
+
+.btn-estatistica:hover {
+  transform: scale(1.05);
+  background-color: #1E4A7D;
+}
+
+.btn-close {
+  font-weight: bold;
+  color: #b5b4b4;
+  cursor: pointer;
+  width: fit-content;
+  float: right;
+  padding: 5px;
+  position: relative;
+  transition: all 0.4s;
+}
+
+.btn-close:hover {
+  color: #4b4b4b;
+}
+
+/* Styles for the overlay button */
+.overlay-button {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+  z-index: 10000;
+  background-color: #003e7d;
+  opacity: 0.7;
+  color: rgb(255, 255, 255);
+  border: none;
+  padding: 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.overlay-button:hover {
+  opacity: 1;
+  background-color: #014b94;
+}

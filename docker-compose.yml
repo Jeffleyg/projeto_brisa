@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    env_file: "./development.env"
+    ports:
+      - "3030:3030"
+    restart: always
+    networks:
+      - backend
+    volumes:
+      - "./src:/app/src"
+    command: npm start
+
+networks:
+  backend:
+    driver: bridge
+    external: true
